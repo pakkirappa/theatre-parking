@@ -2,4 +2,15 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/nav_graph" />
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/homeScreen">
+    <activity
+        android:id="@+id/homeScreen"
+        android:name="com.example.theaterparking.ui.HomeScreen"
+        android:label="HomeScreen" />
+    <activity
+        android:id="@+id/showSelectScreen"
+        android:name="com.example.theaterparking.ui.ShowSelectScreen"
+        android:label="select_screen"
+        tools:layout="@layout/select_screen" />
+</navigation>

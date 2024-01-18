@@ -19,18 +19,27 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.TheaterParking"
         tools:targetApi="31">
-
-
         <activity
-            android:name=".ui.HomeScreen"
-            android:exported="true"
-            android:windowSoftInputMode="stateVisible">
+            android:name=".ui.ShowSelectScreen"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".ui.ParkingEntryScreen"
+            android:exported="false" />
+        <activity
+            android:name=".ui.HomeScreen"
+            android:exported="false"
+            android:windowSoftInputMode="stateVisible">
+            <!--            <intent-filter>-->
+            <!--                <action android:name="android.intent.action.MAIN" />-->
 
+            <!--                <category android:name="android.intent.category.LAUNCHER" />-->
+            <!--            </intent-filter>-->
+        </activity>
 
         <meta-data
             android:name="preloaded_fonts"

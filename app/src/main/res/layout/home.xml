@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+
     <TextView
         android:id="@+id/textView"
         android:layout_width="wrap_content"
@@ -21,15 +22,15 @@
 
     <EditText
         android:id="@+id/userName"
-        android:focusable="true"
-        android:focusableInTouchMode="true"
         style="@style/input"
-        android:layout_marginTop="56dp"
+        android:layout_marginTop="60dp"
         android:autofillHints="name"
         android:ems="10"
-        android:hint="Enter username"
-        android:textColorHint="@color/black"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:hint="@string/enter_username"
         android:inputType="textEmailAddress"
+        android:textColorHint="@color/black"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.508"
         app:layout_constraintStart_toStartOf="parent"
@@ -41,9 +42,9 @@
         android:layout_marginTop="152dp"
         android:autofillHints="name"
         android:ems="10"
-        android:hint="Enter password"
-        android:textColorHint="@color/black"
+        android:hint="@string/enter_password"
         android:inputType="textPassword"
+        android:textColorHint="@color/black"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.491"
         app:layout_constraintStart_toStartOf="parent"
@@ -53,12 +54,23 @@
         android:id="@+id/loginBtn"
         style="@style/button"
         android:layout_marginTop="124dp"
-        android:text="Login"
+        android:text="@string/login"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.508"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/userName" />
 
+    <ProgressBar
+        android:id="@+id/loader"
+        style="@style/loader"
+        android:layout_marginTop="84dp"
+        android:indeterminate="true"
+        android:indeterminateBehavior="repeat"
+        android:indeterminateDrawable="@drawable/loader"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
