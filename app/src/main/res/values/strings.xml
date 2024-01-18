@@ -1,7 +1,6 @@
 <resources>
     <string name="app_name">Theater Parking</string>
     <string name="logo">Logo</string>
-
     <string name="lorem_ipsum">
         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam in scelerisque sem. Mauris
         volutpat, dolor id interdum ullamcorper, risus dolor egestas lectus, sit amet mattis purus
@@ -43,4 +42,11 @@
     <string name="login">Login</string>
     <string name="continue_name">Continue</string>
     <string name="select_show">Select Showtime</string>
+    <string name="select_a_show_to_continue">Select a show to continue</string>
+    <string name="logout">Logout</string>
+    <string name="enter_vehicle_number">Enter Vehicle Number</string>
+    <string name="submit">Submit</string>
+    <string name="or">OR</string>
+    <string name="scan_vehicle_number">Scan Vehicle Number</string>
+    <string name="recent_parking_s">Recent Parking\'s</string>
 </resources>

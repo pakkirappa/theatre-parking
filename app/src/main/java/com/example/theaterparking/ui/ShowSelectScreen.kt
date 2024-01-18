@@ -1,20 +1,19 @@
 package com.example.theaterparking.ui
 
 import CustomSpinnerAdapter
-import android.content.Context
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
-import android.view.ViewGroup
 import android.widget.AdapterView
-import android.widget.ArrayAdapter
+import android.widget.Button
 import android.widget.Spinner
-import android.widget.TextView
 import com.example.theaterparking.R
 
 class ShowSelectScreen : AppCompatActivity() {
-
     private lateinit var showsSpinner: Spinner
+    private lateinit var continueBtn: Button
+
     private val showTimings = listOf("9AM-12PM", "12PM-3PM", "3PM-6PM", "6PM-9PM", "9PM-12AM")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -22,7 +21,9 @@ class ShowSelectScreen : AppCompatActivity() {
         showsSpinner = findViewById(R.id.spinner)
         val adapter = CustomSpinnerAdapter(this, showTimings)
         showsSpinner.adapter = adapter
+        continueBtn = findViewById(R.id.continueBtn)
         handleChange() // call this function to handle the spinner selection
+        handleClick()
     }
 
     private val handleChange = {
@@ -41,6 +42,13 @@ class ShowSelectScreen : AppCompatActivity() {
             override fun onNothingSelected(parent: AdapterView<*>?) {
                 // Handle case when nothing is selected
             }
+        }
+    }
+
+    private val handleClick = {
+        // todo : save the selected show timing in shared preferences
+        continueBtn.setOnClickListener {
+            startActivity(Intent(this, ParkingEntryScreen::class.java))
         }
     }
 }

@@ -20,17 +20,34 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="276dp"
+        android:contentDescription="@string/app_name"
+        android:fontFamily="@font/poppins"
+        android:text="@string/select_a_show_to_continue"
+        android:textAlignment="center"
+        android:textSize="16sp"
+        android:typeface="normal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.149"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <Spinner
         android:id="@+id/spinner"
         style="@style/dropdown"
         android:layout_marginTop="60dp"
         android:prompt="@string/select_show"
+        android:spinnerMode="dropdown"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView" />
 
     <Button
-        android:id="@+id/loginBtn"
+        android:id="@+id/continueBtn"
         style="@style/button"
         android:layout_marginTop="160dp"
         android:text="@string/continue_name"
