@@ -1,6 +1,5 @@
 package com.example.theaterparking.ui
 
-import CustomSpinnerAdapter
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -9,6 +8,7 @@ import android.widget.AdapterView
 import android.widget.Button
 import android.widget.Spinner
 import com.example.theaterparking.R
+import com.example.theaterparking.ui.fragments.CustomSpinnerAdapter
 
 class ShowSelectScreen : AppCompatActivity() {
     private lateinit var showsSpinner: Spinner

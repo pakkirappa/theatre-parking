@@ -1,0 +1,25 @@
+<!-- res/drawable/bottom_border.xml -->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape>
+            <solid android:color="@android:color/transparent" />
+        </shape>
+    </item>
+    <item android:top="10dp"> <!-- Adjust top padding as needed -->
+        <shape>
+            <solid android:color="@color/coral" /> <!-- Replace with your desired background color -->
+            <corners android:radius="20dp" /> <!-- Adjust the radius as needed -->
+        </shape>
+    </item>
+    <item android:top="20dp"> <!-- Adjust top padding as needed -->
+        <shape>
+            <solid android:color="@android:color/transparent" />
+        </shape>
+    </item>
+    <item android:bottom="2dp">
+        <shape>
+            <solid android:color="@color/white" />
+            <corners android:radius="20dp" />
+        </shape>
+    </item>
+</layer-list>

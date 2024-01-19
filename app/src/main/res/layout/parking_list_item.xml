@@ -1,0 +1,18 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/ListItemStyle"
+    android:orientation="horizontal">
+
+    <TextView
+        android:id="@+id/list_item_time"
+        style="@style/singleListItemStyle"
+        android:layout_marginEnd="40dp"/>
+
+    <TextView
+        android:id="@+id/list_item_vNumber"
+        style="@style/singleListItemStyle"
+        android:layout_marginEnd="40dp"/>
+
+    <TextView
+        android:id="@+id/list_item_amount"
+        style="@style/singleListItemStyle" />
+</LinearLayout>

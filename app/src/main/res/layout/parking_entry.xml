@@ -6,19 +6,20 @@
     android:layout_height="match_parent"
     tools:context=".ui.ParkingEntryScreen">
 
-    <Button
-        android:id="@+id/logoutBtn"
-        style="@style/logoutBtn"
-        android:layout_width="93dp"
-        android:layout_height="40dp"
-        android:layout_marginTop="14dp"
-        android:text="@string/logout"
-        android:textColor="@color/white"
-        android:textSize="12sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.95"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+
+        <Button
+            android:id="@+id/logoutBtn"
+            style="@style/logoutBtn"
+            android:layout_width="93dp"
+            android:layout_height="40dp"
+            android:layout_marginTop="14dp"
+            android:text="@string/logout"
+            android:textColor="@color/white"
+            android:textSize="12sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.95"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
         android:id="@+id/vNumber"
@@ -91,12 +92,13 @@
         app:layout_constraintTop_toBottomOf="@+id/vNumber" />
 
     <LinearLayout
-        android:layout_width="368dp"
-        android:layout_height="366dp"
+        android:layout_width="360dp"
+        android:layout_height="360dp"
         android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView">
+
 
         <ListView
             android:id="@+id/parkingList"
@@ -106,6 +108,16 @@
             android:divider="@null"
             android:dividerHeight="1dp"
             android:scrollbars="vertical" />
+
+        <androidx.camera.view.PreviewView
+            android:id="@+id/cameraPreview"
+            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
     </LinearLayout>
 
 
