@@ -21,3 +21,10 @@ def convert_to_user(row):
         'show_id':row[2],
         'status':row[3],
     }
+
+def convert_to_parking(row):
+    return {
+        'id':row[0],
+        'entry_time' : row[1],
+        'exit_time' : row[2],
+    }

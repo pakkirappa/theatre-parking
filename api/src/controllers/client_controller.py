@@ -5,7 +5,7 @@ from constants import TBL_CLIENTS
 from dto.models import ClientDto
 from utils.converters import convert_to_client
 
-router = APIRouter(prefix='/clients' , tags=['clients'])
+router = APIRouter(prefix='/api/clients' , tags=['clients'])
 
 @router.get('/')
 async def get_clients():

@@ -19,3 +19,9 @@ class UserDto(BaseModel):
 class LoginDto(BaseModel):
     username: str
     password: str
+
+class ParkingDto(BaseModel):
+    vehicle_number: str
+    user_id: int
+    client_id: int
+    show_id: int

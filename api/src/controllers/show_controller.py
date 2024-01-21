@@ -5,7 +5,7 @@ from constants import TBL_SHOWS
 from dto.models import ShowDto
 from utils.converters import convert_to_show
 
-router = APIRouter(prefix='/shows' , tags=['shows'])
+router = APIRouter(prefix='/api/shows' , tags=['shows'])
 
 @router.get('/')
 async def get_shows():
@@ -36,13 +36,13 @@ async def add_show(show:ShowDto,response:Response):
     return {"msg":result}
 
 @router.put('/{id}')
-async def update_client(id:int,show:ShowDto):
+async def update_show(id:int,show:ShowDto):
     sql = f'start transaction;update {TBL_SHOWS} set name=%s where id=%s;commit;'
     await db_query(sql,[show.name,id])
     return {'msg':'show updated successfully'}
 
 @router.delete('/{id}')
-async def delete_client(id:int):
+async def delete_show(id:int):
     sql = f'delete from {TBL_SHOWS} where id=%s'
     await db_query(sql,[id])
     return {'msg':'show deleted successfully'}
