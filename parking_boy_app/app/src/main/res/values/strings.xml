@@ -49,4 +49,5 @@
     <string name="or">OR</string>
     <string name="scan_vehicle_number">Scan Vehicle Number</string>
     <string name="recent_parking_s">Recent Parking\'s</string>
+    <string name="toggle_password_visibility">Toggle Password Visibility</string>
 </resources>

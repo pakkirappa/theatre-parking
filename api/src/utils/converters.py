@@ -28,3 +28,13 @@ def convert_to_parking(row):
         'entry_time' : row[1],
         'exit_time' : row[2],
     }
+
+def convert_to_my_parking(row):
+    return {
+        'entry_time' : row[0],
+        'exit_time' : row[1],
+        'time_spent' : row[2],
+        'vehicle_number' : row[3],
+        'user_id' : row[4],
+        'amount' : row[5],
+    }

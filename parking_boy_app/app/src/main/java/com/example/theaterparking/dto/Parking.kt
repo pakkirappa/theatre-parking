@@ -1,4 +1,4 @@
-package com.example.theaterparking.models
+package com.example.theaterparking.dto
 
 import com.google.gson.annotations.SerializedName
 

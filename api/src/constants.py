@@ -10,6 +10,7 @@ TBL_PARKINGS = 'parkings'
 TBL_USERS = 'users'
 TBL_SESSIONS = 'sessions'
 TBL_SHOWS = 'shows'
+VIEW_MY_PARKINGS = 'view_my_parkings'
 
 
 HOST = os.environ.get('HOST', '0.0.0.0')

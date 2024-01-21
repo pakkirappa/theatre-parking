@@ -25,3 +25,4 @@ class ParkingDto(BaseModel):
     user_id: int
     client_id: int
     show_id: int
+    amount: int = 20

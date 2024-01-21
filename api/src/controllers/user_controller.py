@@ -39,7 +39,7 @@ async def login_user(loginDto:LoginDto,response:Response):
         shows.append(row[0])
     await db_query(login_sql)
     token = '1234567890'
-    return {'token':token,'msg':'User logged in successfully','id':user_id , 'shows':shows}
+    return {'token':token,'msg':'User logged in successfully','id':user_id,'clientId' :user[3],'shows':shows}
 
 @router.get('/')
 async def get_users():

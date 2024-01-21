@@ -1,4 +1,4 @@
-package  com.example.theaterparking.ui.fragments
+package  com.example.theaterparking.ui.spinners
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.TextView
 import com.example.theaterparking.R
-import com.example.theaterparking.models.Parking
+import com.example.theaterparking.dto.Parking
 
 class CustomParkingAdapter(
     context: Context,

@@ -1,11 +1,20 @@
 from fastapi import Response
 from fastapi.routing import APIRouter
 from db import db_query
-from constants import TBL_PARKINGS
+from constants import TBL_PARKINGS,VIEW_MY_PARKINGS
 from dto.models import ParkingDto
-from utils.converters import convert_to_parking
+from utils.converters import convert_to_my_parking
 
 router = APIRouter(prefix='/api/parkings' , tags=['parkings'])
+
+@router.get('/filter')
+async def filter_parking(userId:str):
+    sql = f'select * from {VIEW_MY_PARKINGS} where user_id=%s'
+    rows = await db_query(sql,[userId])
+    parkings = []
+    for row in rows:
+        parkings.append(convert_to_my_parking(row))
+    return parkings
 
 @router.get('/')
 async def get_parkings():
@@ -29,8 +38,8 @@ async def get_parking(id:int,response:Response):
 @router.post('/')
 async def add_parking(parking:ParkingDto,response:Response):
     # vehicle_number,user_id,client_id,show_id
-    sql = f'call prc_add_parking(%s,%s,%s,%s)'
-    [data] = await db_query(sql,[parking.vehicle_number,parking.user_id,parking.client_id,parking.show_id])
+    sql = f'call prc_add_parking(%s,%s,%s,%s,%s)'
+    [data] = await db_query(sql,[parking.vehicle_number,parking.user_id,parking.client_id,parking.show_id,parking.amount])
     result = data[0]
     code = data[1]
     response.status_code = code

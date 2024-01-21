@@ -11,6 +11,7 @@ import android.view.animation.AnimationUtils
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ListView
+import android.widget.ProgressBar
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.camera.core.AspectRatio
@@ -24,12 +25,16 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LifecycleOwner
 import com.example.theaterparking.R
+import com.example.theaterparking.api.api
 import com.example.theaterparking.databinding.ParkingEntryBinding
-import com.example.theaterparking.models.Parking
-import com.example.theaterparking.ui.fragments.CustomParkingAdapter
+import com.example.theaterparking.dto.Parking
+import com.example.theaterparking.ui.spinners.CustomParkingAdapter
 import com.example.theaterparking.utils.ImageToTextUtils
 import com.example.theaterparking.utils.ParkingUtils
+import com.example.theaterparking.utils.StorageUtils
 import com.example.theaterparking.utils.ToastUtils
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import java.time.LocalTime
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
@@ -51,6 +56,7 @@ class ParkingEntryScreen : AppCompatActivity() {
     private lateinit var logoutBtn: Button
     private lateinit var cameraPreview: PreviewView
     private lateinit var binding: ParkingEntryBinding
+    private lateinit var loader: ProgressBar
     private val cameraExecutor: ExecutorService by lazy { Executors.newSingleThreadExecutor() }
 
     private var parkings: List<Parking> = listOf(
@@ -76,6 +82,7 @@ class ParkingEntryScreen : AppCompatActivity() {
         scanBtn = findViewById(R.id.scanBtn)
         logoutBtn = findViewById(R.id.logoutBtn)
         cameraPreview = findViewById(R.id.cameraPreview)
+        loader = findViewById(R.id.progressBar)
         binding.cameraPreview.implementationMode = PreviewView.ImplementationMode.COMPATIBLE
         val adapter = CustomParkingAdapter(this, parkings)
         parkingList.adapter = adapter
@@ -83,6 +90,7 @@ class ParkingEntryScreen : AppCompatActivity() {
         handleScan()
         handleSubmit()
         handleLogout()
+        getMyParkings()
     }
 
     override fun onDestroy() {
@@ -106,6 +114,54 @@ class ParkingEntryScreen : AppCompatActivity() {
         }
     }
 
+    private fun getMyParkings() {
+        // call api to get the parking's
+        val userId = StorageUtils.getData("userId", this)
+        if (userId.isNullOrEmpty()) {
+            ToastUtils.showToast(this, "User not found")
+            return
+        }
+        showLoader()
+        GlobalScope.launch {
+            val response = api.getParkingsByUserId(userId)
+            if (response.isSuccessful) {
+                val responseParkingList = response.body()?.map {
+                    Parking(
+                        it.id,
+                        it.entryTime,
+                        it.vehicleNumber,
+                        it.amount
+                    )
+                }
+                if (!responseParkingList.isNullOrEmpty()) {
+                    Log.d(TAG, responseParkingList.toString())
+                    runOnUiThread {
+                        val adapter = CustomParkingAdapter(this@ParkingEntryScreen, responseParkingList)
+                        parkingList.adapter = adapter
+                    }
+                }
+            } else {
+                runOnUiThread {
+                    ToastUtils.showToast(this@ParkingEntryScreen, "Error occurred")
+                }
+            }
+            runOnUiThread {
+                hideLoader()
+            }
+        }
+    }
+
+    private fun showLoader() {
+        loader.visibility = ProgressBar.VISIBLE
+        parkingList.visibility = ListView.GONE
+    }
+
+    private fun hideLoader() {
+        loader.visibility = ProgressBar.GONE
+        parkingList.visibility = ListView.VISIBLE
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun onTextFound(text: String) {
         if (text.length == 10) {
             if (ParkingUtils.isCorrectVehicleNumber(text)) {
