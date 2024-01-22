@@ -3,14 +3,14 @@ from fastapi.routing import APIRouter
 from db import db_query
 from constants import TBL_PARKINGS,VIEW_MY_PARKINGS
 from dto.models import ParkingDto
-from utils.converters import convert_to_my_parking
+from utils.converters import convert_to_my_parking,convert_to_parking
 
 router = APIRouter(prefix='/api/parkings' , tags=['parkings'])
 
 @router.get('/filter')
-async def filter_parking(userId:str):
-    sql = f'select * from {VIEW_MY_PARKINGS} where user_id=%s'
-    rows = await db_query(sql,[userId])
+async def filter_parking(userId:str,items:int = 10,page:int = 1):
+    sql = f'select * from {VIEW_MY_PARKINGS} where user_id=%s order by entry_time desc limit %s,%s'
+    rows = await db_query(sql,[userId , (page - 1) * items,items])
     parkings = []
     for row in rows:
         parkings.append(convert_to_my_parking(row))

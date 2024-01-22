@@ -30,7 +30,7 @@ class ApiProvider {
     companion object {
         fun provideApi(): Api {
             return Retrofit.Builder()
-                .baseUrl(LOCAL_API_URL) // Change this to PROD_API_URL for production
+                .baseUrl(LOCAL_API_URL) // Change this to PROD_API_URL for produ
                 .addConverterFactory(GsonConverterFactory.create())
                 .build()
                 .create(Api::class.java)

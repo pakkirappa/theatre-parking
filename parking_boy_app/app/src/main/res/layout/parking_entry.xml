@@ -7,24 +7,26 @@
     tools:context=".ui.ParkingEntryScreen">
 
 
-    <Button
+    <TextView
         android:id="@+id/logoutBtn"
-        style="@style/logoutBtn"
-        android:layout_width="93dp"
-        android:layout_height="40dp"
-        android:layout_marginTop="14dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:clickable="true"
+        android:focusable="true"
         android:text="@string/logout"
         android:textColor="@color/white"
-        android:textSize="12sp"
+        android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.95"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+
     <EditText
         android:id="@+id/vNumber"
         style="@style/input"
-        android:layout_marginTop="80dp"
+        android:layout_marginTop="76dp"
         android:autofillHints="name"
         android:ems="10"
         android:focusable="true"
@@ -33,11 +35,9 @@
         android:inputType="text"
         android:textColorHint="@color/black"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.491"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
-
+    
     <TextView
         android:id="@+id/recent"
         android:layout_width="42dp"
@@ -127,6 +127,33 @@
             android:visibility="gone" />
 
     </LinearLayout>
+
+
+    <androidx.appcompat.widget.SwitchCompat
+        android:id="@+id/vToggleBtn"
+        style="@style/toggleBtn"
+        android:layout_marginTop="16dp"
+        app:layout_constraintEnd_toStartOf="@+id/logoutBtn"
+        app:layout_constraintHorizontal_bias="0.117"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:switchMinWidth="50dp"
+        app:thumbTint="@color/white"
+        app:trackTint="@color/white" />
+
+    <TextView
+        android:id="@+id/vToggleText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:contentDescription="@string/app_name"
+        android:letterSpacing="0.1"
+        android:text="Bike"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toStartOf="@+id/logoutBtn"
+        app:layout_constraintHorizontal_bias="0.031"
+        app:layout_constraintStart_toEndOf="@+id/vToggleBtn"
+        app:layout_constraintTop_toTopOf="parent" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

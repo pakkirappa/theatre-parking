@@ -16,6 +16,8 @@ async def login_user(loginDto:LoginDto,response:Response):
 
 @router.post('/login')
 async def login_user(loginDto:LoginDto,response:Response):
+    delete_sql = f'truncate table {TBL_SESSIONS}'
+    await db_query(delete_sql)
     sql = f'select id,username,password,client_id from {TBL_USERS} where username = %s OR email = %s'
     user = await db_query(sql,[loginDto.username,loginDto.username])
     if len(user) == 0:

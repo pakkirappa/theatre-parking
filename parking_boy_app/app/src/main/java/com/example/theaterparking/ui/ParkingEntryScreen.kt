@@ -6,15 +6,18 @@ import android.media.AudioManager
 import android.media.ToneGenerator
 import android.os.Build
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.view.animation.AnimationUtils
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ListView
 import android.widget.ProgressBar
+import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
-import androidx.camera.core.AspectRatio
+import androidx.appcompat.widget.SwitchCompat
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ExperimentalGetImage
 import androidx.camera.core.ImageAnalysis
@@ -35,10 +38,12 @@ import com.example.theaterparking.utils.StorageUtils
 import com.example.theaterparking.utils.ToastUtils
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
 import java.time.LocalTime
+import java.util.Date
+import java.util.Locale
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
-
 
 @ExperimentalGetImage
 class ParkingEntryScreen : AppCompatActivity() {
@@ -53,19 +58,15 @@ class ParkingEntryScreen : AppCompatActivity() {
     private lateinit var vNumberField: EditText
     private lateinit var submitBtn: Button
     private lateinit var scanBtn: Button
-    private lateinit var logoutBtn: Button
+    private lateinit var logoutBtn: TextView
     private lateinit var cameraPreview: PreviewView
     private lateinit var binding: ParkingEntryBinding
     private lateinit var loader: ProgressBar
+    private lateinit var vToggleBtn: SwitchCompat
+    private lateinit var vToggleText: TextView
     private val cameraExecutor: ExecutorService by lazy { Executors.newSingleThreadExecutor() }
 
-    private var parkings: List<Parking> = listOf(
-        Parking(1, "10:00 AM", "AP16BV9911", "50/-"),
-        Parking(2, "8:00 AM", "AP16BV9911", "50/-"),
-        Parking(3, "12:00 AM", "AP16BV9911", "50/-"),
-        Parking(4, "9:30 AM", "AP16BV9911", "50/-"),
-        Parking(5, "10:00 AM", "AP16BV9911", "50/-"),
-    )
+    private var parkings: List<Parking> = listOf()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -83,19 +84,29 @@ class ParkingEntryScreen : AppCompatActivity() {
         logoutBtn = findViewById(R.id.logoutBtn)
         cameraPreview = findViewById(R.id.cameraPreview)
         loader = findViewById(R.id.progressBar)
+        vToggleBtn = findViewById(R.id.vToggleBtn)
+        vToggleText = findViewById(R.id.vToggleText)
         binding.cameraPreview.implementationMode = PreviewView.ImplementationMode.COMPATIBLE
         val adapter = CustomParkingAdapter(this, parkings)
         parkingList.adapter = adapter
 
         handleScan()
         handleSubmit()
+        handleToggle()
         handleLogout()
+        handleVNumberUppercase()
         getMyParkings()
     }
 
     override fun onDestroy() {
         super.onDestroy()
         cameraExecutor.shutdown() // shutdown the camera executor
+    }
+
+    override fun onBackPressed() {
+//        super.onBackPressed()
+        // stop user from going back because we don't want to show the login screen again
+        ToastUtils.showToast(this, "Please logout to go back")
     }
 
     override fun onRequestPermissionsResult(
@@ -130,13 +141,14 @@ class ParkingEntryScreen : AppCompatActivity() {
                         it.id,
                         it.entryTime,
                         it.vehicleNumber,
-                        it.amount
+                        it.amount + "/-"
                     )
                 }
                 if (!responseParkingList.isNullOrEmpty()) {
-                    Log.d(TAG, responseParkingList.toString())
                     runOnUiThread {
-                        val adapter = CustomParkingAdapter(this@ParkingEntryScreen, responseParkingList)
+                        parkings = responseParkingList
+                        val adapter =
+                            CustomParkingAdapter(this@ParkingEntryScreen, responseParkingList)
                         parkingList.adapter = adapter
                     }
                 }
@@ -163,26 +175,24 @@ class ParkingEntryScreen : AppCompatActivity() {
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun onTextFound(text: String) {
-        if (text.length == 10) {
-            if (ParkingUtils.isCorrectVehicleNumber(text)) {
-                vNumberField.setText(text)
-                var time = LocalTime.now().toString()
-                val amPm = if (time.substring(0, 2).toInt() > 12) {
-                    "PM"
-                } else {
-                    "AM"
-                }
-                // get only hour
-                time = time.substring(0, 5)
-                val parking = Parking(parkings.size + 1, "$time $amPm", text.uppercase(), "20/-")
-                parkings = listOf(parking) + parkings
-                val adapter = CustomParkingAdapter(this, parkings)
-                parkingList.adapter = adapter
-                ToastUtils.showToast(this, "Parking entry added successfully")
-                vNumberField.setText("")
-                stopCamera()
-                playSound()
+        if (text.length == 10 && ParkingUtils.isCorrectVehicleNumber(text)) {
+            val vNumber = text.uppercase()
+            vNumberField.setText(vNumber)
+            val date = getCurrentDate()
+            val price = if (vToggleBtn.isChecked) {
+                // if toggle button is checked, then price is 30
+                "30/-"
+            } else {
+                "20/-"
             }
+            val parking = Parking(parkings.size + 1, date, vNumber, price)
+            parkings = listOf(parking) + parkings
+            val adapter = CustomParkingAdapter(this, parkings)
+            parkingList.adapter = adapter
+            ToastUtils.showToast(this, "Parking entry added successfully")
+            vNumberField.setText("")
+            stopCamera()
+            playSound()
         }
     }
 
@@ -202,23 +212,10 @@ class ParkingEntryScreen : AppCompatActivity() {
         toneGen.also {
             it.release()
         }
-
-//        val soundUri = RingtoneManager.getDefaultUri(RingtoneManager.TONE_PROP_BEEP)
-//        val mMediaPlayer = MediaPlayer()
-//        mMediaPlayer.setDataSource(this, soundUri)
-//        val audioManager = this.getSystemService(AUDIO_SERVICE) as AudioManager
-//        if (audioManager.getStreamVolume(AudioManager.STREAM_ALARM) != 0) {
-//            mMediaPlayer.setAudioStreamType(AudioManager.STREAM_ALARM)
-//            // Uncomment the following line if you aim to play it repeatedly
-//            // mMediaPlayer.setLooping(true);
-//            mMediaPlayer.prepare()
-//            mMediaPlayer.start()
-//        }
     }
 
     private val imageAnalyzer by lazy {
         ImageAnalysis.Builder()
-            .setTargetAspectRatio(AspectRatio.RATIO_16_9)
             .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
             .setTargetRotation(binding.cameraPreview.display.rotation)
             .setOutputImageFormat(ImageAnalysis.OUTPUT_IMAGE_FORMAT_YUV_420_888)
@@ -283,6 +280,18 @@ class ParkingEntryScreen : AppCompatActivity() {
         scanBtn.text = "Scan Vehicle Number"
     }
 
+    private fun handleToggle() {
+        vToggleBtn.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
+                vToggleText.text = "Car"
+                vToggleBtn.trackTintList = ContextCompat.getColorStateList(this, R.color.coral)
+            } else {
+                vToggleText.text = "Bike"
+                vToggleBtn.trackTintList = ContextCompat.getColorStateList(this, R.color.white)
+            }
+        }
+    }
+
     private fun showAndHideCameraPreview() {
         if (binding.cameraPreview.visibility == PreviewView.VISIBLE) {
             // stop the camera
@@ -295,39 +304,82 @@ class ParkingEntryScreen : AppCompatActivity() {
         }
     }
 
+    private fun handleVNumberUppercase() {
+        vNumberField.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(
+                charSequence: CharSequence?,
+                start: Int,
+                count: Int,
+                after: Int
+            ) {
+                // This method is called to notify you that characters within `charSequence` are about to be replaced with new text.
+            }
+
+            override fun onTextChanged(
+                charSequence: CharSequence?,
+                start: Int,
+                before: Int,
+                count: Int
+            ) {
+                // This method is called to notify you that characters within `charSequence` have been replaced with new text.
+
+                // Convert the text to uppercase and set it back to the EditText
+                vNumberField.removeTextChangedListener(this)
+                vNumberField.setText(charSequence?.toString()?.uppercase())
+                vNumberField.setSelection(vNumberField.text.length) // Move the cursor to the end
+                vNumberField.addTextChangedListener(this)
+            }
+
+            override fun afterTextChanged(editable: Editable?) {
+                // This method is called to notify you that somewhere within `editable`, new text has been added or removed.
+            }
+        })
+    }
+
+    private fun getCurrentDate(): String {
+        val dateFormatter = SimpleDateFormat("hh:mm a", Locale.getDefault())
+        val currentDate = dateFormatter.format(Date())
+        // last 2 words uppercase
+        val words = currentDate.split(" ")
+        val lastTwoWords = words.takeLast(2).joinToString(" ") { it.uppercase() }
+        return "${words.dropLast(2).joinToString(" ")} $lastTwoWords"
+    }
+
     @RequiresApi(Build.VERSION_CODES.O)
     private val handleSubmit = {
         submitBtn.setOnClickListener {
             // check vehicle number
             val vNumber = vNumberField.text.toString()
+
             if (vNumber.isEmpty()) {
                 vNumberField.error = "Vehicle number is required"
                 return@setOnClickListener
             } else if (vNumber.length < 10) {
                 vNumberField.error = "Vehicle number must be 10 characters long"
                 return@setOnClickListener
-            } else if (vNumber.length > 10) {
-                vNumberField.error = "Vehicle number cannot be more than 10 characters long"
+            } else if (!ParkingUtils.isCorrectVehicleNumber(vNumber)) {
+                vNumberField.error = "Vehicle Number must be in APXXABXXXX format"
                 return@setOnClickListener
             } else {
                 // call api to check if vehicle number is valid
                 // if valid, show success message
                 // else show error message
-                var time = LocalTime.now().toString()
-                val amPm = if (time.substring(0, 2).toInt() > 12) {
-                    "PM"
+                val price = if (vToggleBtn.isChecked) {
+                    // if toggle button is checked, then price is 30
+                    "30/-"
                 } else {
-                    "AM"
+                    "20/-"
                 }
-                // get only hour
-                time = time.substring(0, 5)
-                val parking = Parking(parkings.size + 1, "$time $amPm", vNumber.uppercase(), "20/-")
+                // getting current date
+                val date = getCurrentDate()
+                val parking = Parking(parkings.size + 1, date, vNumber, price)
                 // add to the first position of the list
                 parkings = listOf(parking) + parkings
                 val adapter = CustomParkingAdapter(this, parkings)
                 parkingList.adapter = adapter
                 ToastUtils.showToast(this, "Parking entry added successfully")
                 vNumberField.setText("")
+                playSound()
 
                 AnimationUtils.loadAnimation(this, R.anim.slide_up).also {
                     parkingList.startAnimation(it)
