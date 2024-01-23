@@ -3,8 +3,6 @@ package com.example.theaterparking.ui
 import android.content.Intent
 import com.example.theaterparking.utils.KeyboardUtils
 import android.os.Bundle
-import android.util.Log
-import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ProgressBar
@@ -16,7 +14,6 @@ import com.example.theaterparking.api.api
 import com.example.theaterparking.dto.LoginDto
 import com.example.theaterparking.utils.StorageUtils
 import com.example.theaterparking.utils.ToastUtils
-import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import org.json.JSONObject
