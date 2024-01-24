@@ -45,6 +45,7 @@ import java.util.Locale
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
+@RequiresApi(Build.VERSION_CODES.O)
 @ExperimentalGetImage
 class ParkingEntryScreen : AppCompatActivity() {
     private companion object {
@@ -103,6 +104,7 @@ class ParkingEntryScreen : AppCompatActivity() {
         cameraExecutor.shutdown() // shutdown the camera executor
     }
 
+    //
     override fun onBackPressed() {
 //        super.onBackPressed()
         // stop user from going back because we don't want to show the login screen again
@@ -119,7 +121,7 @@ class ParkingEntryScreen : AppCompatActivity() {
             if (allPermissionsGranted()) {
                 startCamera()
             } else {
-                ToastUtils.showToast(this, "Permissions not granted by the user.")
+                ToastUtils.showToast(this, "Please grant permission to detect vehicle numbers.")
                 finish()
             }
         }
