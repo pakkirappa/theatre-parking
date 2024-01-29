@@ -36,6 +36,7 @@ import com.example.theaterparking.utils.ImageToTextUtils
 import com.example.theaterparking.utils.ParkingUtils
 import com.example.theaterparking.utils.StorageUtils
 import com.example.theaterparking.utils.ToastUtils
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
@@ -45,7 +46,6 @@ import java.util.Locale
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
-@RequiresApi(Build.VERSION_CODES.O)
 @ExperimentalGetImage
 class ParkingEntryScreen : AppCompatActivity() {
     private companion object {
@@ -104,7 +104,6 @@ class ParkingEntryScreen : AppCompatActivity() {
         cameraExecutor.shutdown() // shutdown the camera executor
     }
 
-    //
     override fun onBackPressed() {
 //        super.onBackPressed()
         // stop user from going back because we don't want to show the login screen again
@@ -121,7 +120,7 @@ class ParkingEntryScreen : AppCompatActivity() {
             if (allPermissionsGranted()) {
                 startCamera()
             } else {
-                ToastUtils.showToast(this, "Please grant permission to detect vehicle numbers.")
+                ToastUtils.showToast(this, "Permissions not granted by the user.")
                 finish()
             }
         }
@@ -135,7 +134,7 @@ class ParkingEntryScreen : AppCompatActivity() {
             return
         }
         showLoader()
-        GlobalScope.launch {
+        GlobalScope.launch(Dispatchers.IO) {
             val response = api.getParkingsByUserId(userId)
             if (response.isSuccessful) {
                 val responseParkingList = response.body()?.map {
@@ -149,9 +148,8 @@ class ParkingEntryScreen : AppCompatActivity() {
                 if (!responseParkingList.isNullOrEmpty()) {
                     runOnUiThread {
                         parkings = responseParkingList
-                        val adapter =
+                        parkingList.adapter =
                             CustomParkingAdapter(this@ParkingEntryScreen, responseParkingList)
-                        parkingList.adapter = adapter
                     }
                 }
             } else {

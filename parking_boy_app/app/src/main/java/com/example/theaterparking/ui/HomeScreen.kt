@@ -14,6 +14,7 @@ import com.example.theaterparking.api.api
 import com.example.theaterparking.dto.LoginDto
 import com.example.theaterparking.utils.StorageUtils
 import com.example.theaterparking.utils.ToastUtils
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import org.json.JSONObject
@@ -67,7 +68,7 @@ class HomeScreen : AppCompatActivity() {
     }
 
     private fun handleLogin() {
-        GlobalScope.launch {
+        GlobalScope.launch(Dispatchers.IO) {
             val userName = userNameField.text.toString()
             val password = passwordField.text.toString()
             val loginDto = LoginDto(userName, password)
